@@ -1,7 +1,18 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import { GoogleGenAI } from '@google/genai';
 
-import { ALLOWED_MIME_TYPES, GEMINI_MODELS } from './constants/config';
+const GEMINI_MODELS = {
+  IMAGE: 'gemini-2.5-flash-image',
+  VOXEL: 'gemini-3-flash-preview',
+} as const;
+
+const ALLOWED_MIME_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+] as const;
 
 const safeJson = async (
   req: IncomingMessage
