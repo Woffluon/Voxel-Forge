@@ -1,0 +1,144 @@
+{
+  "name": "VoxelForge Components",
+  "version": "1.0.0",
+  "description": "Component configuration for VoxelForge application",
+  "components": {
+    "layout": {
+      "Header": {
+        "displayName": "Başlık",
+        "props": {},
+        "styles": {
+          "container": "text-center border-b-2 border-black pb-6",
+          "title": "text-3xl sm:text-4xl md:text-5xl font-black leading-tight tracking-tight",
+          "subtitle": "mt-2 text-base sm:text-lg text-gray-600 font-semibold"
+        }
+      },
+      "App": {
+        "displayName": "Ana Uygulama",
+        "props": {
+          "prompt": "string",
+          "generationState": "object",
+          "contentState": "object",
+          "selectedTile": "string",
+          "showGenerator": "boolean",
+          "aspectRatio": "string",
+          "useOptimization": "boolean"
+        },
+        "styles": {
+          "container": "container min-h-screen flex flex-col items-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans bg-white",
+          "mainContent": "w-full max-w-2xl space-y-6 sm:space-y-8"
+        }
+      }
+    },
+    "generator": {
+      "GeneratorPanel": {
+        "displayName": "Resim Üretici Panel",
+        "props": {
+          "show": "boolean",
+          "isLoading": "boolean",
+          "generateButtonLabel": "string",
+          "prompt": "string",
+          "placeholderIndex": "number",
+          "aspectRatio": "string",
+          "useOptimization": "boolean",
+          "isDragging": "boolean"
+        },
+        "styles": {
+          "container": "space-y-6 animate-in slide-in-from-top-4 fade-in duration-300 border-2 border-black p-6 bg-gray-50 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative z-10",
+          "uploadArea": "touch-manipulation w-full h-64 border-2 border-dashed border-black flex flex-col items-center justify-center cursor-pointer transition-colors",
+          "input": "w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 rounded-none text-base sm:text-lg placeholder-gray-400 bg-white h-12 sm:h-14",
+          "button": "touch-manipulation w-full sm:w-40 h-12 min-h-[44px] text-sm whitespace-nowrap"
+        }
+      }
+    },
+    "viewer": {
+      "Viewer": {
+        "displayName": "İçerik Görüntüleyici",
+        "props": {
+          "isVisible": "boolean",
+          "isLoading": "boolean",
+          "status": "string",
+          "thinkingText": "string",
+          "displayPrompt": "string",
+          "imageData": "string",
+          "voxelCode": "string",
+          "viewMode": "string"
+        },
+        "styles": {
+          "container": "space-y-2",
+          "viewerArea": "w-full h-[60vh] sm:h-auto sm:aspect-square border-2 border-black relative bg-gray-50 flex items-center justify-center overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+          "loadingOverlay": "absolute inset-0 bg-white z-20 flex flex-col items-start justify-center p-8 sm:p-12 overflow-hidden",
+          "image": "w-full h-full object-contain",
+          "iframe": "w-full h-full border-0"
+        }
+      }
+    },
+    "grid": {
+      "TilesGrid": {
+        "displayName": "Örnek Grid",
+        "props": {
+          "examples": "array",
+          "isLoading": "boolean",
+          "selectedTile": "string",
+          "userContent": "array",
+          "showGenerator": "boolean"
+        },
+        "styles": {
+          "grid": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4",
+          "tile": "relative aspect-square border-2 border-black cursor-pointer transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+          "tileImage": "w-full h-full object-cover",
+          "selectedTile": "ring-4 ring-black ring-offset-2"
+        }
+      },
+      "ExampleTile": {
+        "displayName": "Örnek Karo",
+        "props": {
+          "example": "object",
+          "isSelected": "boolean",
+          "onClick": "function"
+        },
+        "styles": {
+          "container": "relative aspect-square border-2 border-black cursor-pointer transition-all hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+          "image": "w-full h-full object-cover",
+          "overlay": "absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-opacity"
+        }
+      }
+    }
+  },
+  "constants": {
+    "ASPECT_RATIOS": ["1:1", "16:9", "9:16", "4:3", "3:4"],
+    "ALLOWED_MIME_TYPES": ["image/jpeg", "image/png", "image/webp"],
+    "SAMPLE_PROMPTS": [
+      "A cozy cabin in the woods with smoke coming from chimney",
+      "Futuristic cityscape with flying cars and neon lights",
+      "Underwater coral reef with colorful fish and sea turtles"
+    ]
+  },
+  "api": {
+    "endpoints": {
+      "generateImage": "/api/generate-image",
+      "generateVoxel": "/api/generate-voxel"
+    },
+    "models": {
+      "image": "gemini-2.5-flash",
+      "voxel": "gemini-3-pro"
+    }
+  },
+  "theme": {
+    "colors": {
+      "primary": "#000000",
+      "secondary": "#6B7280",
+      "background": "#FFFFFF",
+      "accent": "#F3F4F6"
+    },
+    "fonts": {
+      "primary": "font-sans",
+      "heading": "font-black",
+      "body": "font-semibold"
+    },
+    "shadows": {
+      "default": "shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+      "hover": "shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
+    }
+  }
+}
