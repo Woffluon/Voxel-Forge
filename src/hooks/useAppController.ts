@@ -445,7 +445,12 @@ export const useAppController = () => {
           });
       }
     }
-  }, [contentState.imageData, contentState.viewMode, contentState.voxelCode, contentState.voxelUrl]);
+  }, [
+    contentState.imageData,
+    contentState.viewMode,
+    contentState.voxelCode,
+    contentState.voxelUrl,
+  ]);
 
   const handleToggleViewMode = useCallback(() => {
     setContentState((prev: ContentState) => ({
