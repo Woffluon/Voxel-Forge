@@ -94,6 +94,19 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react(),
+      {
+        name: 'copy-config-for-vercel',
+        async closeBundle() {
+          const fs = await import('fs');
+          const path = await import('path');
+          const src = path.resolve(__dirname, 'src/constants/config.ts');
+          const dest = path.resolve(__dirname, 'api/constants/config.ts');
+          const destDir = path.dirname(dest);
+          if (!fs.existsSync(destDir))
+            fs.mkdirSync(destDir, { recursive: true });
+          fs.copyFileSync(src, dest);
+        },
+      },
       ...(mode === 'production'
         ? [
             viteImagemin({

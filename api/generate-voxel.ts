@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import { GoogleGenAI } from '@google/genai';
 
-import { ALLOWED_MIME_TYPES, GEMINI_MODELS } from '../src/constants/config';
+import { ALLOWED_MIME_TYPES, GEMINI_MODELS } from './constants/config';
 
 const safeJson = async (
   req: IncomingMessage
@@ -128,7 +128,9 @@ export default async function handler(
     const prompt = typeof bodyObj.prompt === 'string' ? bodyObj.prompt : '';
 
     const allowedMimeTypes = new Set(ALLOWED_MIME_TYPES);
-    const safeMimeType = allowedMimeTypes.has(mimeType)
+    const safeMimeType = allowedMimeTypes.has(
+      mimeType as (typeof ALLOWED_MIME_TYPES)[number]
+    )
       ? mimeType
       : 'image/jpeg';
 
