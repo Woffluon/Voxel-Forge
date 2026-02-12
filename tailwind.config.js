@@ -1,18 +1,15 @@
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       spacing: {
-        '1': '0.25rem',
-        '2': '0.5rem',
-        '3': '0.75rem',
-        '4': '1rem',
-        '6': '1.5rem',
-        '8': '2rem',
-        '12': '3rem',
+        1: '0.25rem',
+        2: '0.5rem',
+        3: '0.75rem',
+        4: '1rem',
+        6: '1.5rem',
+        8: '2rem',
+        12: '3rem',
       },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1rem' }],
@@ -26,13 +23,13 @@ export default {
         '5xl': ['3rem', { lineHeight: '1' }],
       },
       zIndex: {
-        '0': '0',
-        '10': '10',
-        '20': '20',
-        '30': '30',
-        '40': '40',
-        '50': '50',
-        '60': '60',
+        0: '0',
+        10: '10',
+        20: '20',
+        30: '30',
+        40: '40',
+        50: '50',
+        60: '60',
         auto: 'auto',
       },
     },

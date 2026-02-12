@@ -87,7 +87,12 @@ export default async function handler(
   }
 
   if (!process.env.GEMINI_API_KEY) {
-    sendJson(res, 500, { error: 'Missing GEMINI_API_KEY', requestId }, requestId);
+    sendJson(
+      res,
+      500,
+      { error: 'Missing GEMINI_API_KEY', requestId },
+      requestId
+    );
     return;
   }
 
@@ -123,7 +128,9 @@ export default async function handler(
     const prompt = typeof bodyObj.prompt === 'string' ? bodyObj.prompt : '';
 
     const allowedMimeTypes = new Set(ALLOWED_MIME_TYPES);
-    const safeMimeType = allowedMimeTypes.has(mimeType) ? mimeType : 'image/jpeg';
+    const safeMimeType = allowedMimeTypes.has(mimeType)
+      ? mimeType
+      : 'image/jpeg';
 
     if (!imageBase64 || !prompt.trim() || prompt.trim().length > 2000) {
       sendJson(res, 400, { error: 'Invalid request', requestId }, requestId);
@@ -159,7 +166,12 @@ export default async function handler(
       .join('');
 
     if (!html.trim()) {
-      sendJson(res, 502, { error: 'Upstream response contained no HTML', requestId }, requestId);
+      sendJson(
+        res,
+        502,
+        { error: 'Upstream response contained no HTML', requestId },
+        requestId
+      );
       return;
     }
 
@@ -175,6 +187,11 @@ export default async function handler(
           : err,
     });
 
-    sendJson(res, 500, { error: 'Internal Server Error', requestId }, requestId);
+    sendJson(
+      res,
+      500,
+      { error: 'Internal Server Error', requestId },
+      requestId
+    );
   }
 }

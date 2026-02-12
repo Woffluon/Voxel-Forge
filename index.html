@@ -1,17 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://esm.sh; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob: https://www.gstatic.com; connect-src 'self' https://generativelanguage.googleapis.com; font-src 'self' data:; frame-src 'self' blob:; worker-src 'self' blob:;">
-    <meta name="Author" content="Efe Arabacı 2026">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://esm.sh; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob: https://www.gstatic.com; connect-src 'self' https://generativelanguage.googleapis.com; font-src 'self' data:; frame-src 'self' blob:; worker-src 'self' blob:;"
+    />
+    <meta name="Author" content="Efe Arabacı 2026" />
     <title>VoxelForge</title>
     <link rel="preload" href="/index.css" as="style" />
     <link rel="dns-prefetch" href="https://generativelanguage.googleapis.com" />
     <link rel="dns-prefetch" href="https://www.gstatic.com" />
-    <link rel="preconnect" href="https://generativelanguage.googleapis.com" crossorigin />
-<link rel="stylesheet" href="/index.css">
-</head>
+    <link
+      rel="preconnect"
+      href="https://generativelanguage.googleapis.com"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/index.css" />
+  </head>
   <body class="bg-white text-black antialiased">
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>

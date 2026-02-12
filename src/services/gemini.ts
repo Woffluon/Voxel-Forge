@@ -32,8 +32,16 @@ const parseErrorResponse = async (response: Response): Promise<string> => {
   const contentType = response.headers.get('content-type') || '';
   if (contentType.includes('application/json')) {
     try {
-      const payload = (await response.json()) as { error?: string; message?: string };
-      return payload?.error || payload?.message || response.statusText || 'Request failed';
+      const payload = (await response.json()) as {
+        error?: string;
+        message?: string;
+      };
+      return (
+        payload?.error ||
+        payload?.message ||
+        response.statusText ||
+        'Request failed'
+      );
     } catch {
       return response.statusText || 'Request failed';
     }
@@ -56,7 +64,10 @@ const fetchJson = async <T>(
   const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(url, { ...requestInit, signal: controller.signal });
+    const response = await fetch(url, {
+      ...requestInit,
+      signal: controller.signal,
+    });
     if (!response.ok) {
       const message = await parseErrorResponse(response);
       throw new ApiError(message, response.status);

@@ -158,7 +158,11 @@ export default defineConfig(({ mode }) => {
                 if (!geminiApiKey) {
                   res.statusCode = 500;
                   res.setHeader('Content-Type', 'application/json');
-                  res.end(JSON.stringify({ error: 'GEMINI_API_KEY is not configured' }));
+                  res.end(
+                    JSON.stringify({
+                      error: 'GEMINI_API_KEY is not configured',
+                    })
+                  );
                   return;
                 }
 
@@ -195,7 +199,7 @@ export default defineConfig(({ mode }) => {
                 res.statusCode = 500;
                 res.end('No image generated');
               });
-            } catch (e) {
+            } catch {
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ error: 'Internal Server Error' }));
@@ -241,7 +245,7 @@ export default defineConfig(({ mode }) => {
                       ],
                     },
                   });
-                } catch (fallbackError) {
+                } catch {
                   response = await ai.models.generateContent({
                     model: 'gemini-3-flash-preview',
                     contents: {
@@ -271,7 +275,7 @@ export default defineConfig(({ mode }) => {
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ html: text }));
               });
-            } catch (e) {
+            } catch {
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ error: 'Internal Server Error' }));
