@@ -6,7 +6,7 @@ export const CONFIG = {
 
 export const GEMINI_MODELS = {
   IMAGE: 'gemini-2.5-flash-image',
-  VOXEL: 'gemini-3-pro-preview',
+  VOXEL: 'gemini-3-flash-preview',
 } as const;
 
 export const ALLOWED_MIME_TYPES = [

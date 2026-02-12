@@ -16,6 +16,62 @@ export const VOXEL_PROMPT =
 const imageLimiter = new RateLimiter(5, 60000);
 const voxelLimiter = new RateLimiter(3, 60000);
 
+class ApiError extends Error {
+  status: number;
+  details?: unknown;
+
+  constructor(message: string, status: number, details?: unknown) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.details = details;
+  }
+}
+
+const parseErrorResponse = async (response: Response): Promise<string> => {
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    try {
+      const payload = (await response.json()) as { error?: string; message?: string };
+      return payload?.error || payload?.message || response.statusText || 'Request failed';
+    } catch {
+      return response.statusText || 'Request failed';
+    }
+  }
+
+  try {
+    const text = await response.text();
+    return text || response.statusText || 'Request failed';
+  } catch {
+    return response.statusText || 'Request failed';
+  }
+};
+
+const fetchJson = async <T>(
+  url: string,
+  init: RequestInit & { timeoutMs?: number } = {}
+): Promise<T> => {
+  const { timeoutMs = 120000, ...requestInit } = init;
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, { ...requestInit, signal: controller.signal });
+    if (!response.ok) {
+      const message = await parseErrorResponse(response);
+      throw new ApiError(message, response.status);
+    }
+    return (await response.json()) as T;
+  } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new ApiError('Request timed out. Please try again.', 408);
+    }
+    throw err;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+};
+
 export const generateImage = async (
   prompt: string,
   aspectRatio: string = '1:1',
@@ -34,22 +90,20 @@ export const generateImage = async (
       finalPrompt = `${IMAGE_SYSTEM_PROMPT}\n\nSubject: ${prompt}`;
     }
 
-    const response = await fetch('/api/generate-image', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        prompt: finalPrompt,
-        aspectRatio,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Image generation failed: ${response.statusText}`);
-    }
-
-    const data = (await response.json()) as { data: string; mimeType?: string };
+    const data = await fetchJson<{ data: string; mimeType?: string }>(
+      '/api/generate-image',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: finalPrompt,
+          aspectRatio,
+        }),
+        timeoutMs: 120000,
+      }
+    );
     if (!data?.data) {
       throw new Error('No image generated.');
     }
@@ -58,6 +112,9 @@ export const generateImage = async (
     return `data:${mimeType};base64,${data.data}`;
   } catch (error) {
     Logger.error('Image generation failed', error, { aspectRatio, optimize });
+    if (error instanceof ApiError) {
+      throw new Error(`Image generation failed: ${error.message}`);
+    }
     throw new Error('Failed to generate image. Please try again.');
   }
 };
@@ -79,7 +136,10 @@ export const generateVoxelScene = async (
       throw new Error(`Rate limit exceeded. Please wait ${waitTime} seconds.`);
     }
 
-    const response = await fetch('/api/generate-voxel', {
+    const data = await fetchJson<{
+      html: string;
+      thoughts?: string[];
+    }>('/api/generate-voxel', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -89,16 +149,8 @@ export const generateVoxelScene = async (
         mimeType,
         prompt: VOXEL_PROMPT,
       }),
+      timeoutMs: 180000,
     });
-
-    if (!response.ok) {
-      throw new Error(`Voxel scene generation failed: ${response.statusText}`);
-    }
-
-    const data = (await response.json()) as {
-      html: string;
-      thoughts?: string[];
-    };
 
     if (onThoughtUpdate && data?.thoughts?.length) {
       for (const thought of data.thoughts) {
@@ -109,6 +161,9 @@ export const generateVoxelScene = async (
     return extractHtmlFromText(data?.html || '');
   } catch (error) {
     Logger.error('Voxel scene generation failed', error, { mimeType });
+    if (error instanceof ApiError) {
+      throw new Error(`Voxel scene generation failed: ${error.message}`);
+    }
     throw new Error('Failed to generate voxel scene. Please try again.');
   }
 };

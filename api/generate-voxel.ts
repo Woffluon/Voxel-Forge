@@ -1,15 +1,21 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import { GoogleGenAI } from '@google/genai';
 
-import { GEMINI_MODELS } from '../src/constants/config';
+import { ALLOWED_MIME_TYPES, GEMINI_MODELS } from '../src/constants/config';
 
-const json = async (req: IncomingMessage): Promise<unknown> => {
+const safeJson = async (
+  req: IncomingMessage
+): Promise<{ ok: true; value: unknown } | { ok: false; raw: string }> => {
   const chunks: Buffer[] = [];
   for await (const chunk of req) {
     chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
   }
   const raw = Buffer.concat(chunks).toString('utf-8') || '{}';
-  return JSON.parse(raw);
+  try {
+    return { ok: true, value: JSON.parse(raw) };
+  } catch {
+    return { ok: false, raw };
+  }
 };
 
 type TextPart = {
@@ -24,10 +30,12 @@ const isTextPart = (part: unknown): part is TextPart => {
 const sendJson = (
   res: ServerResponse,
   statusCode: number,
-  payload: unknown
+  payload: unknown,
+  requestId?: string
 ) => {
   res.statusCode = statusCode;
   res.setHeader('Content-Type', 'application/json');
+  if (requestId) res.setHeader('X-Request-Id', requestId);
   res.end(JSON.stringify(payload));
 };
 
@@ -67,6 +75,11 @@ export default async function handler(
   req: IncomingMessage & { method?: string },
   res: ServerResponse
 ) {
+  const requestId =
+    (typeof req.headers['x-request-id'] === 'string' &&
+      req.headers['x-request-id'].trim()) ||
+    `vf_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+
   if (req.method !== 'POST') {
     res.statusCode = 405;
     res.end('Method Not Allowed');
@@ -74,7 +87,7 @@ export default async function handler(
   }
 
   if (!process.env.GEMINI_API_KEY) {
-    sendJson(res, 500, { error: 'Missing GEMINI_API_KEY' });
+    sendJson(res, 500, { error: 'Missing GEMINI_API_KEY', requestId }, requestId);
     return;
   }
 
@@ -82,13 +95,25 @@ export default async function handler(
     const ip = getClientIp(req);
     const rate = checkRateLimit(ip);
     if (!rate.ok) {
-      sendJson(res, 429, {
-        error: `Rate limit exceeded. Please wait ${Math.ceil(rate.retryAfterMs / 1000)} seconds.`,
-      });
+      sendJson(
+        res,
+        429,
+        {
+          error: `Rate limit exceeded. Please wait ${Math.ceil(rate.retryAfterMs / 1000)} seconds.`,
+          requestId,
+        },
+        requestId
+      );
       return;
     }
 
-    const body = await json(req);
+    const parsed = await safeJson(req);
+    if (!parsed.ok) {
+      sendJson(res, 400, { error: 'Invalid JSON', requestId }, requestId);
+      return;
+    }
+
+    const body = parsed.value;
     const bodyObj =
       body && typeof body === 'object' ? (body as Record<string, unknown>) : {};
     const imageBase64 =
@@ -97,13 +122,16 @@ export default async function handler(
       typeof bodyObj.mimeType === 'string' ? bodyObj.mimeType : 'image/jpeg';
     const prompt = typeof bodyObj.prompt === 'string' ? bodyObj.prompt : '';
 
+    const allowedMimeTypes = new Set(ALLOWED_MIME_TYPES);
+    const safeMimeType = allowedMimeTypes.has(mimeType) ? mimeType : 'image/jpeg';
+
     if (!imageBase64 || !prompt.trim() || prompt.trim().length > 2000) {
-      sendJson(res, 400, { error: 'Invalid request' });
+      sendJson(res, 400, { error: 'Invalid request', requestId }, requestId);
       return;
     }
 
     if (imageBase64.length > 15_000_000) {
-      sendJson(res, 413, { error: 'Payload too large' });
+      sendJson(res, 413, { error: 'Payload too large', requestId }, requestId);
       return;
     }
 
@@ -115,7 +143,7 @@ export default async function handler(
         parts: [
           {
             inlineData: {
-              mimeType,
+              mimeType: safeMimeType,
               data: imageBase64,
             },
           },
@@ -130,8 +158,23 @@ export default async function handler(
       .filter((t): t is string => Boolean(t))
       .join('');
 
-    sendJson(res, 200, { html });
-  } catch {
-    sendJson(res, 500, { error: 'Internal Server Error' });
+    if (!html.trim()) {
+      sendJson(res, 502, { error: 'Upstream response contained no HTML', requestId }, requestId);
+      return;
+    }
+
+    sendJson(res, 200, { html, requestId }, requestId);
+  } catch (err) {
+    const ip = getClientIp(req);
+    console.error('[generate-voxel] failed', {
+      requestId,
+      ip,
+      error:
+        err instanceof Error
+          ? { name: err.name, message: err.message, stack: err.stack }
+          : err,
+    });
+
+    sendJson(res, 500, { error: 'Internal Server Error', requestId }, requestId);
   }
 }

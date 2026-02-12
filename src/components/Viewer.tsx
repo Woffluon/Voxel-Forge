@@ -57,7 +57,7 @@ export const Viewer: React.FC<ViewerProps> = ({
               <div className="w-full max-w-3xl mb-12 text-xl font-bold tracking-tight">
                 {status === 'generating_image'
                   ? 'Generating three.js scene with Gemini 2.5 Flash Image'
-                  : 'Generating three.js scene with Gemini 3 Pro'}
+                  : 'Generating three.js scene with Gemini 3 Flash'}
               </div>
 
               <div className="prompt-display w-full max-w-3xl mb-8 text-gray-600 font-mono text-xs sm:text-sm break-words overflow-hidden leading-relaxed border-l-2 border-gray-300 pl-4">
@@ -177,7 +177,7 @@ export const Viewer: React.FC<ViewerProps> = ({
             type="button"
             onClick={onVoxelize}
             disabled={isLoading}
-            title="Generate 3D voxel art from this image using Gemini 3 Pro"
+            title="Generate 3D voxel art from this image using Gemini 3 Flash"
             aria-label="Generate voxel art"
             className={`touch-manipulation ${buttonStyles.base} ${buttonStyles.primary} flex-1 min-w-[160px] min-h-[44px] py-4`}
           >
