@@ -67,7 +67,8 @@ export const Viewer: React.FC<ViewerProps> = ({
                   : 'Generating three.js scene with Gemini 3 Flash'}
               </div>
 
-              <div className="prompt-display w-full max-w-3xl mb-8 font-mono text-xs sm:text-sm break-words overflow-hidden leading-relaxed border-l-[4px] border-stark-white pl-4 font-bold opacity-90">
+              {/* Hidden detailed prompt display per user request */}
+              {/* <div className="prompt-display w-full max-w-3xl mb-8 font-mono text-xs sm:text-sm break-words overflow-hidden leading-relaxed border-l-[4px] border-stark-white pl-4 font-bold opacity-90">
                 <div className="max-h-[30vh] overflow-y-auto overflow-x-hidden">
                   <div className="overflow-wrap-anywhere">
                     {status === 'generating_voxels' && imageData && (
@@ -80,7 +81,7 @@ export const Viewer: React.FC<ViewerProps> = ({
                     <span className="align-middle">{displayPrompt}</span>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="w-full max-w-3xl font-mono text-xs sm:text-sm whitespace-pre-wrap break-words max-h-[40%] overflow-y-auto font-bold opacity-90">
                 {thinkingText ? (
@@ -134,7 +135,7 @@ export const Viewer: React.FC<ViewerProps> = ({
             title="Voxel Scene"
             src={voxelUrl}
             className="w-full h-full border-0"
-            sandbox="allow-scripts allow-same-origin"
+            sandbox="allow-scripts"
             referrerPolicy="no-referrer"
             loading="lazy"
           />

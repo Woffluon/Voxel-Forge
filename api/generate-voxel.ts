@@ -157,38 +157,55 @@ export default async function handler(
 
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-    const response = await ai.models.generateContent({
-      model: GEMINI_MODELS.VOXEL,
-      contents: {
-        parts: [
-          {
-            inlineData: {
-              mimeType: safeMimeType,
-              data: imageBase64,
+    try {
+      const response = await ai.models.generateContent({
+        model: GEMINI_MODELS.VOXEL,
+        contents: {
+          parts: [
+            {
+              inlineData: {
+                mimeType: safeMimeType,
+                data: imageBase64,
+              },
             },
-          },
-          { text: prompt },
-        ],
-      },
-    });
+            { text: prompt },
+          ],
+        },
+      });
 
-    const parts = response.candidates?.[0]?.content?.parts;
-    const html = (parts || [])
-      .map((p) => (isTextPart(p) ? p.text : undefined))
-      .filter((t): t is string => Boolean(t))
-      .join('');
+      const parts = response.candidates?.[0]?.content?.parts;
+      const html = (parts || [])
+        .map((p) => (isTextPart(p) ? p.text : undefined))
+        .filter((t): t is string => Boolean(t))
+        .join('');
 
-    if (!html.trim()) {
+      if (!html.trim()) {
+        console.warn('[generate-voxel] Empty HTML response', { requestId });
+        sendJson(
+          res,
+          502,
+          { error: 'Upstream service returned empty content', requestId },
+          requestId
+        );
+        return;
+      }
+
+      sendJson(res, 200, { html, requestId }, requestId);
+    } catch (aiErr) {
+      console.error('[generate-voxel] Upstream AI error', {
+        requestId,
+        error: aiErr instanceof Error ? aiErr.message : aiErr,
+      });
       sendJson(
         res,
-        502,
-        { error: 'Upstream response contained no HTML', requestId },
+        503,
+        {
+          error: 'Voxel generation service temporarily unavailable',
+          requestId,
+        },
         requestId
       );
-      return;
     }
-
-    sendJson(res, 200, { html, requestId }, requestId);
   } catch (err) {
     const ip = getClientIp(req);
     console.error('[generate-voxel] failed', {

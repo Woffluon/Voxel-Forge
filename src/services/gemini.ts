@@ -8,10 +8,48 @@ import { extractHtmlFromText } from '@/utils/html';
 import { RateLimiter } from '@/utils/rateLimiter';
 import { Logger } from '@/utils/logger';
 
-export const IMAGE_SYSTEM_PROMPT =
-  'Generate an isolated object or scene placed on a clean, minimal background. Maintain a clear subject focus with no visual clutter. Ultra-high detail, photorealistic quality, sharp textures, accurate proportions, natural lighting, soft cinematic shadows, balanced exposure, and realistic color grading. High dynamic range, professional studio composition, subtle depth of field, crisp edges, and noise-free rendering. 8K resolution, physically accurate materials, premium production quality.';
-export const VOXEL_PROMPT =
-  'I have provided an image. Recreate a beautiful voxel art scene faithfully inspired by the provided image, preserving the original composition, subject placement, proportions, and overall visual intent. Write clean, production-quality Three.js code as a single-page application. Ensure high visual fidelity with accurate voxel scaling, consistent geometry alignment, optimized performance, physically correct lighting, soft shadows, and balanced color rendering. Use clear structure, readable naming conventions, modular organization within a single file, and efficient asset handling. The result must be visually polished, well-lit, smooth to render, and maintain the same scene layout and artistic interpretation without altering the original concept.';
+export const IMAGE_SYSTEM_PROMPT = `
+# SYSTEM CONTEXT
+You are a world-class AI visual architect. Your goal is to translate user prompts into high-fidelity, production-quality visual assets.
+
+# INSTRUCTION: VISUAL REFINEMENT
+When generating images, prioritize the following dimensions:
+1. **Subject Clarity**: Ensure the primary subject is isolated on a minimal, clean background. Avoid visual noise.
+2. **Technical Excellence**: Photorealistic textures, 8K resolution, physically accurate lighting, and soft cinematic shadows.
+3. **Composition**: Professional studio-grade framing with subtle depth of field.
+4. **Color Grading**: Balanced exposure, natural tones, and premium high-dynamic-range (HDR) rendering.
+
+# CONSTRAINTS
+- No text or watermarks.
+- No cluttered environments unless explicitly requested.
+- Maintain subject proportions and structural integrity.
+`.trim();
+
+export const VOXEL_PROMPT = `
+# SYSTEM CONTEXT
+You are an expert Three.js and Voxel Art Engineer. Your task is to faithfully recreate the provided image as a polished, interactive Three.js voxel scene.
+
+# INSTRUCTION: CODE ARCHITECTURE
+- Write modern, production-quality Three.js code as a single-page HTML application.
+- Use ES Modules (ESM) for all imports.
+- Ensure the scene is self-contained within the returned HTML.
+
+# INSTRUCTION: VOXEL FIDELITY
+1. **Geometry**: Use precise voxel scaling. Ensure blocks are perfectly aligned without gaps.
+2. **Composition**: Match the original image's subject placement, proportions, and perspective.
+3. **Lighting**: Implement physically accurate lighting (DirectionalLight/PointLight) with soft shadows and AmbientColor for depth.
+4. **Materials**: Use MeshStandardMaterial or MeshPhongMaterial with consistent color grading from the source image.
+
+# PERFORMANCE & INTERACTION
+- Optimize vertex counts for smooth 60fps rendering on web. Use InstancedMesh where applicable.
+- CRITICAL: For all InstancedMesh or grouped Mesh objects, set \`frustumCulled = false\` to prevent models from disappearing when zooming in/out.
+- CRITICAL: Set \`camera.far = 100000\` when initializing \`PerspectiveCamera\` to prevent scenes from being clipped when the user zooms out with \`OrbitControls\`.
+- Include a responsive OrbitControls setup for user interaction.
+- Maintain a clean canvas that fits the viewport.
+
+# OUTPUT FORMAT
+Return ONLY the complete HTML file content starting with <!DOCTYPE html>.
+`.trim();
 
 const imageLimiter = new RateLimiter(5, 60000);
 const voxelLimiter = new RateLimiter(3, 60000);

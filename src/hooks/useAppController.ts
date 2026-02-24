@@ -351,11 +351,13 @@ export const useAppController = () => {
 
   const handleVoxelize = useCallback(async () => {
     if (!contentState.imageData) return;
+
+    Logger.info('Starting voxelization process');
     setGenerationState((prev: GenerationState) => ({
       ...prev,
       status: 'generating_voxels',
       errorMsg: '',
-      thinkingText: null,
+      thinkingText: 'Analyzing image...',
     }));
     setIsViewerVisible(true);
 
@@ -367,21 +369,23 @@ export const useAppController = () => {
         (thoughtFragment) => {
           thoughtBuffer += thoughtFragment;
 
+          // FAANG-level robust parsing: look for bolded status headers
           const matches = thoughtBuffer.match(/\*\*([^*]+)\*\*/g);
 
           if (matches && matches.length > 0) {
             const lastMatch = matches[matches.length - 1];
             if (!lastMatch) return;
             const header = lastMatch.replace(/\*\*/g, '').trim();
-            setGenerationState((prev: GenerationState) => ({
-              ...prev,
-              thinkingText:
-                prev.thinkingText === header ? prev.thinkingText : header,
-            }));
+
+            setGenerationState((prev: GenerationState) => {
+              if (prev.thinkingText === header) return prev;
+              return { ...prev, thinkingText: header };
+            });
           }
         }
       );
 
+      Logger.info('Voxelization successful, extracting HTML');
       const code = zoomCamera(hideBodyText(codeRaw));
       setContentState((prev: ContentState) => ({
         ...prev,
@@ -402,6 +406,7 @@ export const useAppController = () => {
         thinkingText: null,
       }));
     } catch (err) {
+      Logger.error('Voxelization lifecycle failed', err);
       handleError(err);
     }
   }, [contentState.imageData, handleError, selectedTile]);

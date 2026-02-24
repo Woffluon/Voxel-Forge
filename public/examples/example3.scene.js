@@ -28,7 +28,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87CEEB); // Sky blue
 scene.fog = new THREE.Fog(0x87CEEB, 40, 130);
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
 camera.position.set(-60, 50, 60); // Isometric-ish view similar to photo
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -260,6 +260,7 @@ const material = new THREE.MeshLambertMaterial({ color: 0xffffff }); // White ba
 const mesh = new THREE.InstancedMesh(geometry, material, voxels.length);
 mesh.castShadow = true;
 mesh.receiveShadow = true;
+mesh.frustumCulled = false;
 
 const dummy = new THREE.Object3D();
 const color = new THREE.Color();

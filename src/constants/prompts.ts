@@ -1,8 +1,8 @@
 export const SAMPLE_PROMPTS = [
-  'A tree house under the sea',
-  'A cyberpunk street food stall',
-  'An ancient temple floating in the sky',
-  'A cozy winter cabin with smoke',
-  'A futuristic mars rover',
-  'A dragon guarding gold',
+  'Modernist brutalist pavilion with cantilevered concrete and glass',
+  'Ethereal floating botanical garden with translucent organic structures',
+  'Hyper-detailed futuristic laboratory with holographic interface arrays',
+  'Minimalist zen sanctuary with geometric stone sculptures and mist',
+  'Industrial steampunk forge with glowing embers and mechanical gears',
+  'Cinematic neo-tokyo intersection with layered parametric neon displays',
 ];

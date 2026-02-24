@@ -31,7 +31,7 @@ scene.background = new THREE.Color(0xffeedd);
 // Fog to simulate clouds/atmosphere
 scene.fog = new THREE.FogExp2(0xffeedd, 0.015);
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
 camera.position.set(60, 30, 60);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -227,6 +227,7 @@ const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.
 const instancedMesh = new THREE.InstancedMesh(geometry, material, voxels.length);
 instancedMesh.castShadow = true;
 instancedMesh.receiveShadow = true;
+instancedMesh.frustumCulled = false;
 
 const dummy = new THREE.Object3D();
 const color = new THREE.Color();
@@ -253,6 +254,7 @@ const waterMat = new THREE.MeshStandardMaterial({
     roughness: 0.1
 });
 const waterfallMesh = new THREE.InstancedMesh(waterGeo, waterMat, waterCount);
+waterfallMesh.frustumCulled = false;
 scene.add(waterfallMesh);
 
 const waterParticles = [];
@@ -272,6 +274,7 @@ const petalCount = 200;
 const petalGeo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
 const petalMat = new THREE.MeshBasicMaterial({ color: PALETTE.LEAVES_1 });
 const petalMesh = new THREE.InstancedMesh(petalGeo, petalMat, petalCount);
+petalMesh.frustumCulled = false;
 scene.add(petalMesh);
 
 const petals = [];

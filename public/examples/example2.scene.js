@@ -22,7 +22,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x6EB1FF); // Sky blue
 scene.fog = new THREE.Fog(0x6EB1FF, 200, 900);
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
 camera.position.set(100, 50, 150);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -68,6 +68,7 @@ function createVoxel(x, y, z, colorHex, parent) {
     mesh.position.set(x * VOXEL_SIZE, y * VOXEL_SIZE, z * VOXEL_SIZE);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
+    mesh.frustumCulled = false;
     parent.add(mesh);
     return mesh;
 }

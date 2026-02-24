@@ -125,31 +125,46 @@ export default async function handler(
 
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-    const response = await ai.models.generateContent({
-      model: GEMINI_MODELS.IMAGE,
-      contents: {
-        parts: [{ text: trimmedPrompt.replace(/[<>]/g, '') }],
-      },
-      config: {
-        responseModalities: ['IMAGE'],
-        imageConfig: {
-          aspectRatio: safeAspectRatio,
+    try {
+      const response = await ai.models.generateContent({
+        model: GEMINI_MODELS.IMAGE,
+        contents: {
+          parts: [{ text: trimmedPrompt.replace(/[<>]/g, '') }],
         },
-      },
-    });
-
-    const part = response.candidates?.[0]?.content?.parts?.[0];
-    if (hasInlineData(part) && part.inlineData) {
-      const inlineData = part.inlineData;
-      sendJson(res, 200, {
-        data: inlineData.data,
-        mimeType: inlineData.mimeType || 'image/png',
+        config: {
+          responseModalities: ['IMAGE'],
+          imageConfig: {
+            aspectRatio: safeAspectRatio,
+          },
+        },
       });
-      return;
-    }
 
-    sendJson(res, 500, { error: 'No image generated' });
-  } catch {
+      const part = response.candidates?.[0]?.content?.parts?.[0];
+      if (hasInlineData(part) && part.inlineData) {
+        const inlineData = part.inlineData;
+        sendJson(res, 200, {
+          data: inlineData.data,
+          mimeType: inlineData.mimeType || 'image/png',
+        });
+        return;
+      }
+
+      console.error('[generate-image] No image in response', {
+        requestId: ip,
+        candidates: response.candidates?.length,
+      });
+      sendJson(res, 502, { error: 'Upstream AI provided no image content' });
+    } catch (aiErr) {
+      console.error('[generate-image] Upstream AI error', {
+        requestId: ip,
+        error: aiErr instanceof Error ? aiErr.message : aiErr,
+      });
+      sendJson(res, 503, {
+        error: 'Image generation service temporarily unavailable',
+      });
+    }
+  } catch (err) {
+    console.error('[generate-image] Fatal internal error', err);
     sendJson(res, 500, { error: 'Internal Server Error' });
   }
 }
