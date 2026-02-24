@@ -14,11 +14,11 @@ type ExampleTileProps = {
 export const ExampleTile = React.memo(
   ({ example, index, isSelected, isLoading, onClick }: ExampleTileProps) => {
     const className = useMemo(() => {
-      return `touch-manipulation ${buttonStyles.base} ${buttonStyles.tile} min-h-[44px] min-w-[44px] aspect-square relative overflow-hidden group cursor-pointer bg-gray-100
+      return `touch-manipulation ${buttonStyles.base} ${buttonStyles.tile} min-h-[44px] min-w-[44px] aspect-square relative overflow-hidden group cursor-pointer bg-stark-white border-[3px] border-pitch-black
                         ${
                           isSelected
-                            ? 'scale-[1.02] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] -translate-y-1'
-                            : 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+                            ? 'scale-[1.02] shadow-brutal-xl -translate-y-1 -translate-x-1 outline outline-[3px] outline-acid-green z-10'
+                            : 'shadow-brutal-md z-0'
                         }`;
     }, [isSelected]);
 

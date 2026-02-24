@@ -41,15 +41,15 @@ export const TilesGrid: React.FC<TilesGridProps> = ({
         onClick={onUserTileClick}
         disabled={isLoading}
         aria-label="Generate new scene"
-        className={`touch-manipulation ${buttonStyles.base} ${buttonStyles.tile} min-h-[44px] min-w-[44px] aspect-square flex flex-col items-center justify-center group overflow-hidden relative
-                    ${selectedTile === 'user' ? 'scale-[1.02] -translate-y-1' : ''}
-                    ${!userContent && !showGenerator ? 'text-black hover:bg-gray-50' : ''}
+        className={`touch-manipulation ${buttonStyles.base} ${buttonStyles.tile} min-h-[44px] min-w-[44px] aspect-square flex flex-col items-center justify-center group overflow-hidden relative border-[3px] border-pitch-black
+                    ${selectedTile === 'user' ? 'scale-[1.02] -translate-y-1 -translate-x-1 outline outline-[3px] outline-acid-green' : ''}
+                    ${!userContent && !showGenerator ? 'text-pitch-black hover:bg-gray-100' : ''}
                     ${
                       showGenerator && selectedTile === 'user'
-                        ? 'bg-black text-white shadow-[4px_4px_0px_0px_#888]'
+                        ? 'bg-pitch-black text-stark-white shadow-brutal-sm'
                         : selectedTile === 'user'
-                          ? 'shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]'
-                          : 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+                          ? 'shadow-brutal-xl'
+                          : 'shadow-brutal-md'
                     }
                 `}
         title={userContent ? 'View Generated Image' : 'Generate New Image'}
@@ -70,7 +70,7 @@ export const TilesGrid: React.FC<TilesGridProps> = ({
                   viewBox="0 0 24 24"
                   strokeWidth={3}
                   stroke="currentColor"
-                  className="w-12 h-12 text-white drop-shadow-md"
+                  className="w-12 h-12 text-stark-white drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]"
                 >
                   <path
                     strokeLinecap="square"

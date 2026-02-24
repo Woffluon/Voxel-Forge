@@ -14,6 +14,7 @@ dist/**/*.map
 *.local
 
 # Editor directories and files
+.agents
 .vscode/*
 !.vscode/extensions.json
 .idea

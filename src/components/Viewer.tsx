@@ -37,13 +37,20 @@ export const Viewer: React.FC<ViewerProps> = ({
   return (
     <div className="space-y-2">
       <div
-        className="w-full h-[60vh] sm:h-auto sm:aspect-square border-2 border-black relative bg-gray-50 flex items-center justify-center overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+        className="w-full h-[60vh] sm:h-auto sm:aspect-square border-[4px] border-pitch-black relative bg-stark-white flex items-center justify-center overflow-hidden shadow-brutal-xl"
         role="region"
         aria-label="Content Viewer"
       >
+        {/* Technical Data / Corners */}
+        <div className="absolute top-3 left-3 text-xs font-black text-pitch-black/50 pointer-events-none z-10">
+          [SYS: RDY]
+        </div>
+        <div className="absolute bottom-3 right-3 text-xs font-black text-pitch-black/50 pointer-events-none z-10">
+          [VXL_FRG: v2.0]
+        </div>
         {isLoading && (
           <div
-            className="absolute inset-0 bg-white z-20 flex flex-col items-start justify-center p-8 sm:p-12 overflow-hidden"
+            className="absolute inset-0 bg-electric-blue text-stark-white z-20 flex flex-col items-start justify-center p-8 sm:p-12 overflow-hidden"
             role="status"
             aria-live="polite"
             aria-busy="true"
@@ -60,14 +67,14 @@ export const Viewer: React.FC<ViewerProps> = ({
                   : 'Generating three.js scene with Gemini 3 Flash'}
               </div>
 
-              <div className="prompt-display w-full max-w-3xl mb-8 text-gray-600 font-mono text-xs sm:text-sm break-words overflow-hidden leading-relaxed border-l-2 border-gray-300 pl-4">
+              <div className="prompt-display w-full max-w-3xl mb-8 font-mono text-xs sm:text-sm break-words overflow-hidden leading-relaxed border-l-[4px] border-stark-white pl-4 font-bold opacity-90">
                 <div className="max-h-[30vh] overflow-y-auto overflow-x-hidden">
                   <div className="overflow-wrap-anywhere">
                     {status === 'generating_voxels' && imageData && (
                       <img
                         src={imageData}
                         alt="Source"
-                        className="inline-block h-[1.5em] w-auto mr-2 align-middle border border-gray-300"
+                        className="inline-block h-[1.5em] w-auto mr-2 align-middle border-[2px] border-pitch-black"
                       />
                     )}
                     <span className="align-middle">{displayPrompt}</span>
@@ -75,7 +82,7 @@ export const Viewer: React.FC<ViewerProps> = ({
                 </div>
               </div>
 
-              <div className="w-full max-w-3xl text-gray-600 font-mono text-xs sm:text-sm whitespace-pre-wrap break-words max-h-[40%] overflow-y-auto">
+              <div className="w-full max-w-3xl font-mono text-xs sm:text-sm whitespace-pre-wrap break-words max-h-[40%] overflow-y-auto font-bold opacity-90">
                 {thinkingText ? (
                   <span>
                     {thinkingText}
@@ -90,8 +97,12 @@ export const Viewer: React.FC<ViewerProps> = ({
         )}
 
         {!imageData && !isLoading && status !== 'error' && (
-          <div className="text-gray-400 text-center px-6 pointer-events-none">
-            <p className="text-lg">Select an example, or generate your own!</p>
+          <div className="text-pitch-black text-center px-6 pointer-events-none flex flex-col items-center">
+            <div className="font-black text-5xl sm:text-7xl md:text-8xl opacity-10 uppercase tracking-tighter mix-blend-multiply">
+              AWAITING
+              <br />
+              INPUT
+            </div>
           </div>
         )}
 

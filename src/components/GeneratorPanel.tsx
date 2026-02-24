@@ -48,7 +48,7 @@ export const GeneratorPanel: React.FC<GeneratorPanelProps> = ({
   if (!show) return null;
 
   return (
-    <div className="space-y-6 animate-in slide-in-from-top-4 fade-in duration-300 border-2 border-black p-6 bg-gray-50 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative z-10">
+    <div className="space-y-6 animate-in slide-in-from-top-4 fade-in duration-150 border-[3px] border-pitch-black p-6 bg-stark-white shadow-brutal-lg relative z-10">
       <div className="w-full">
         <label className="block text-sm font-bold mb-2 uppercase">
           Upload Image
@@ -68,9 +68,9 @@ export const GeneratorPanel: React.FC<GeneratorPanelProps> = ({
             }
           }}
           className={`
-                        touch-manipulation w-full h-64 border-2 border-dashed border-black flex flex-col items-center justify-center cursor-pointer transition-colors
-                        focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2
-                        ${isDragging ? 'bg-gray-200' : 'bg-white hover:bg-gray-50'}
+                        touch-manipulation w-full h-64 border-[3px] border-dashed border-pitch-black flex flex-col items-center justify-center cursor-pointer transition-all duration-150
+                        focus:outline-none focus:ring-0
+                        ${isDragging ? 'bg-electric-blue text-stark-white border-stark-white' : 'bg-stark-white hover:bg-gray-100 text-pitch-black'}
                     `}
         >
           <input
@@ -80,15 +80,15 @@ export const GeneratorPanel: React.FC<GeneratorPanelProps> = ({
             onChange={onFileUpload}
             className="hidden"
           />
-          <p className="font-bold uppercase text-sm text-gray-600">
+          <p className="font-bold uppercase text-sm">
             Drag and drop or click to upload image
           </p>
         </div>
       </div>
 
       <div className="relative flex items-center justify-center w-full">
-        <div className="border-t-2 border-gray-200 w-full absolute"></div>
-        <span className="bg-gray-50 px-3 text-xs font-bold text-gray-400 uppercase relative z-10">
+        <div className="border-t-[3px] border-pitch-black w-full absolute"></div>
+        <span className="bg-stark-white px-4 py-1 border-[3px] border-pitch-black font-black text-pitch-black uppercase relative z-10 shadow-brutal-sm">
           OR
         </span>
       </div>
@@ -108,7 +108,7 @@ export const GeneratorPanel: React.FC<GeneratorPanelProps> = ({
             onChange={(e) => onPromptChange(e.target.value)}
             placeholder={SAMPLE_PROMPTS[placeholderIndex]}
             aria-label="Image prompt description"
-            className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 rounded-none text-base sm:text-lg placeholder-gray-400 bg-white h-12 sm:h-14"
+            className="w-full px-4 py-3 border-[3px] border-pitch-black focus:outline-none focus:ring-0 rounded-none text-base sm:text-lg placeholder-pitch-black placeholder-opacity-50 bg-stark-white h-12 sm:h-14 font-bold shadow-base-sm"
             disabled={isLoading}
           />
         </div>
@@ -125,7 +125,7 @@ export const GeneratorPanel: React.FC<GeneratorPanelProps> = ({
             onChange={(e) => onAspectRatioChange(e.target.value)}
             disabled={isLoading}
             aria-label="Select aspect ratio"
-            className="w-full px-4 py-3 border-2 border-black focus:outline-none rounded-none bg-white h-12 sm:h-14"
+            className="w-full px-4 py-3 border-[3px] border-pitch-black focus:outline-none rounded-none bg-stark-white h-12 sm:h-14 font-bold appearance-none cursor-pointer text-pitch-black"
           >
             {ASPECT_RATIOS.map((ratio) => (
               <option key={ratio} value={ratio}>
@@ -154,10 +154,10 @@ export const GeneratorPanel: React.FC<GeneratorPanelProps> = ({
               aria-describedby="optimize-description"
             />
             <div
-              className={`block w-10 h-6 border-2 border-black ${useOptimization ? 'bg-black' : 'bg-gray-500'}`}
+              className={`block w-12 h-7 border-[3px] border-pitch-black transition-colors ${useOptimization ? 'bg-acid-green' : 'bg-stark-white'}`}
             ></div>
             <div
-              className={`dot absolute left-1 top-1 bg-white w-4 h-4 transition-transform ${useOptimization ? 'translate-x-4' : ''}`}
+              className={`dot absolute left-1 top-1 bg-pitch-black border-[2px] border-pitch-black w-5 h-5 transition-transform duration-150 ${useOptimization ? 'translate-x-5' : ''}`}
             ></div>
           </div>
           <div className="ml-3 text-sm font-bold uppercase">Optimise Scene</div>

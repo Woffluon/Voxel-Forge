@@ -10,6 +10,7 @@ import { Header } from '@/components/Header';
 import { TilesGrid } from '@/components/TilesGrid';
 import { GeneratorPanel } from '@/components/GeneratorPanel';
 import { Viewer } from '@/components/Viewer';
+import { BrutalistBackground } from '@/components/BrutalistBackground';
 import { useAppController } from '@/hooks/useAppController';
 
 const App: React.FC = () => {
@@ -50,14 +51,16 @@ const App: React.FC = () => {
       : 'Generate';
 
   return (
-    <div className="container min-h-screen flex flex-col items-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans bg-white">
+    <div className="container min-h-screen flex flex-col items-center pt-16 pb-16 sm:py-24 px-4 sm:px-6 lg:px-8 font-sans bg-transparent relative">
+      <BrutalistBackground />
+
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-black focus:text-white font-bold"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-pitch-black focus:text-stark-white font-bold"
       >
         Skip to main content
       </a>
-      <div className="w-full max-w-2xl space-y-6 sm:space-y-8">
+      <div className="w-full max-w-3xl lg:max-w-5xl space-y-6 sm:space-y-8 relative z-10 px-2 sm:px-0">
         <Header />
 
         <main id="main-content" tabIndex={-1}>

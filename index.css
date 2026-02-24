@@ -8,6 +8,10 @@
 
 body {
   overflow-x: hidden;
+  background-color: #f4f4f0;
+  color: #000000;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.15) 2px, transparent 2px);
+  background-size: 32px 32px;
 }
 
 .container {
@@ -33,9 +37,7 @@ body {
 }
 
 .button-hover {
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: all 0.15s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: transform, box-shadow;
 }
 
@@ -44,12 +46,15 @@ body {
   20% {
     content: '';
   }
+
   40% {
     content: '.';
   }
+
   60% {
     content: '..';
   }
+
   80% {
     content: '...';
   }
