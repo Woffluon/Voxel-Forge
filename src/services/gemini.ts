@@ -9,9 +9,9 @@ import { RateLimiter } from '@/utils/rateLimiter';
 import { Logger } from '@/utils/logger';
 
 export const IMAGE_SYSTEM_PROMPT =
-  'Generate an isolated object/scene on a simple background.';
+  'Generate an isolated object or scene placed on a clean, minimal background. Maintain a clear subject focus with no visual clutter. Ultra-high detail, photorealistic quality, sharp textures, accurate proportions, natural lighting, soft cinematic shadows, balanced exposure, and realistic color grading. High dynamic range, professional studio composition, subtle depth of field, crisp edges, and noise-free rendering. 8K resolution, physically accurate materials, premium production quality.';
 export const VOXEL_PROMPT =
-  'I have provided an image. Code a beautiful voxel art scene inspired by this image. Write threejs code as a single-page.';
+  'I have provided an image. Recreate a beautiful voxel art scene faithfully inspired by the provided image, preserving the original composition, subject placement, proportions, and overall visual intent. Write clean, production-quality Three.js code as a single-page application. Ensure high visual fidelity with accurate voxel scaling, consistent geometry alignment, optimized performance, physically correct lighting, soft shadows, and balanced color rendering. Use clear structure, readable naming conventions, modular organization within a single file, and efficient asset handling. The result must be visually polished, well-lit, smooth to render, and maintain the same scene layout and artistic interpretation without altering the original concept.';
 
 const imageLimiter = new RateLimiter(5, 60000);
 const voxelLimiter = new RateLimiter(3, 60000);
